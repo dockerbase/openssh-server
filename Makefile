@@ -48,7 +48,7 @@ ssh:
 	chmod 600 build/insecure_key
 	@ID=$$(docker ps | grep -F "$(NAME):$(VERSION)" | awk '{ print $$1 }') && \
 		if test "$$ID" = ""; then echo "Container is not running."; exit 1; fi && \
-		IP=$$(docker inspect $$ID | grep IPAddr | sed 's/.*: "//; s/".*//') && \
+		IP=$$(docker inspect $$ID -f '{{ .NetworkSettings.IPAddress }}') && \
 		echo "SSHing into $$IP" && \
 		ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i build/insecure_key root@$$IP
 
